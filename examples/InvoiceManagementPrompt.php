@@ -29,11 +29,11 @@ final class InvoiceManagementPrompt extends BasePrompt
     {
         return [
             'task' => [
-                'type'        => 'string',
+                'type' => 'string',
                 'description' => 'The invoice management task (create, update, send, cancel, etc.)',
             ],
             'context' => [
-                'type'        => 'string',
+                'type' => 'string',
                 'description' => 'Additional context or requirements for the task',
             ],
         ];
@@ -42,10 +42,10 @@ final class InvoiceManagementPrompt extends BasePrompt
     public function handle(Request $request): Response
     {
         $arguments = $this->validateArguments($request->arguments());
-        $template  = $this->getTemplate();
+        $template = $this->getTemplate();
 
         $rendered = $template->render([
-            'task'    => $arguments['task'] ?? 'invoice management',
+            'task' => $arguments['task'] ?? 'invoice management',
             'context' => $arguments['context'] ?? 'No specific context provided',
         ]);
 
@@ -55,16 +55,16 @@ final class InvoiceManagementPrompt extends BasePrompt
     protected function getTemplate(): PromptTemplate
     {
         return new PromptTemplate(
-            "You are assisting with invoice management in a Laravel application.\n\n" .
-            "Task: {{task}}\n\n" .
-            "Context: {{context}}\n\n" .
-            "The Invoice model has the following key features:\n" .
-            "- Invoice numbers are formatted as INV-YYYY-SEQ (e.g., INV-2025-001)\n" .
-            "- Status values: draft, sent, paid, overdue, cancelled\n" .
-            "- Relationships: customer, items (line items), payments\n" .
-            "- Financial fields: subtotal, tax, total, paid_amount, balance\n" .
-            "- Dates: issue_date (when invoice was created), due_date (payment deadline)\n\n" .
-            "Provide clear, accurate guidance following Laravel best practices."
+            "You are assisting with invoice management in a Laravel application.\n\n".
+            "Task: {{task}}\n\n".
+            "Context: {{context}}\n\n".
+            "The Invoice model has the following key features:\n".
+            "- Invoice numbers are formatted as INV-YYYY-SEQ (e.g., INV-2025-001)\n".
+            "- Status values: draft, sent, paid, overdue, cancelled\n".
+            "- Relationships: customer, items (line items), payments\n".
+            "- Financial fields: subtotal, tax, total, paid_amount, balance\n".
+            "- Dates: issue_date (when invoice was created), due_date (payment deadline)\n\n".
+            'Provide clear, accurate guidance following Laravel best practices.'
         );
     }
 }
