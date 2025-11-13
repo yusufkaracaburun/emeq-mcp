@@ -37,4 +37,3 @@ test('mcp registry service lists all pre-built prompts', function () {
     expect($components['prompts'])->toBeArray()
         ->and($components['prompts'])->not->toBeEmpty();
 });
-

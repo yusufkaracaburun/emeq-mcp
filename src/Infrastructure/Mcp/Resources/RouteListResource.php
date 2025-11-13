@@ -70,4 +70,3 @@ final class RouteListResource extends BaseResource
         ];
     }
 }
-

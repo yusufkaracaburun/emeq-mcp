@@ -38,4 +38,3 @@ test('mcp tool can have handler', function () {
 
     expect($tool->getHandler())->toBe('App\\Handlers\\TestHandler');
 });
-

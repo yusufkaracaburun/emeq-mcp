@@ -13,8 +13,7 @@ final class BoostContextProvider
 
     public function __construct(
         private readonly BoostIntegrationInterface $boostIntegration
-    ) {
-    }
+    ) {}
 
     /**
      * Add context data.
@@ -60,4 +59,3 @@ final class BoostContextProvider
         ]);
     }
 }
-

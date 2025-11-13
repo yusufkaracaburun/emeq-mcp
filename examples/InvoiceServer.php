@@ -23,10 +23,10 @@ final class InvoiceServer extends BaseServer
     {
         $this->name = 'Invoice MCP Server';
         $this->version = '1.0.0';
-        $this->instructions = 'You are an AI assistant for invoice management. ' .
-            'You can help users retrieve invoice information and list invoices with filters. ' .
-            'Always provide clear and accurate information. ' .
-            'When listing invoices, provide summaries. ' .
+        $this->instructions = 'You are an AI assistant for invoice management. '.
+            'You can help users retrieve invoice information and list invoices with filters. '.
+            'Always provide clear and accurate information. '.
+            'When listing invoices, provide summaries. '.
             'When getting an invoice, provide all relevant details.';
 
         // Register invoice tools
@@ -36,4 +36,3 @@ final class InvoiceServer extends BaseServer
         ];
     }
 }
-

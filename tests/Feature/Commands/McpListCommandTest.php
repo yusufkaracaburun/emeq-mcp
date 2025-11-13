@@ -26,4 +26,3 @@ test('mcp list command shows prompts', function () {
 
     expect(Artisan::output())->toContain('Prompts:');
 });
-

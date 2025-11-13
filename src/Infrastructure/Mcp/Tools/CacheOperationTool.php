@@ -155,4 +155,3 @@ final class CacheOperationTool extends BaseTool
         ];
     }
 }
-

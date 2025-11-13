@@ -65,4 +65,3 @@ final class MakeMcpResourceCommand extends Command
         return app('files');
     }
 }
-

@@ -3,7 +3,7 @@
 use Emeq\McpLaravel\Infrastructure\Mcp\Builders\ServerBuilder;
 
 test('server builder can create server with fluent api', function () {
-    $server = (new ServerBuilder())
+    $server = (new ServerBuilder)
         ->name('Test Server')
         ->version('2.0.0')
         ->instructions('Test instructions')
@@ -16,7 +16,7 @@ test('server builder can create server with fluent api', function () {
 });
 
 test('server builder can add multiple tools', function () {
-    $server = (new ServerBuilder())
+    $server = (new ServerBuilder)
         ->withTools(['App\\Tools\\Tool1', 'App\\Tools\\Tool2'])
         ->build();
 
@@ -24,7 +24,7 @@ test('server builder can add multiple tools', function () {
 });
 
 test('server builder can add multiple resources', function () {
-    $server = (new ServerBuilder())
+    $server = (new ServerBuilder)
         ->withResources(['App\\Resources\\Resource1', 'App\\Resources\\Resource2'])
         ->build();
 
@@ -32,10 +32,9 @@ test('server builder can add multiple resources', function () {
 });
 
 test('server builder can add multiple prompts', function () {
-    $server = (new ServerBuilder())
+    $server = (new ServerBuilder)
         ->withPrompts(['App\\Prompts\\Prompt1', 'App\\Prompts\\Prompt2'])
         ->build();
 
     expect($server->getPrompts())->toHaveCount(2);
 });
-

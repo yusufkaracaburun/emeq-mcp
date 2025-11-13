@@ -26,4 +26,3 @@ test('boost install command creates guidelines directory', function () {
         rmdir($guidelinesPath);
     }
 });
-

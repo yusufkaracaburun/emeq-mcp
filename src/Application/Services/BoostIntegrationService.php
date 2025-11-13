@@ -12,8 +12,7 @@ final class BoostIntegrationService
         private readonly BoostIntegrationInterface $boostIntegration,
         private readonly BoostGuidelineManager $guidelineManager,
         private readonly BoostContextProvider $contextProvider
-    ) {
-    }
+    ) {}
 
     /**
      * Initialize Boost integration.
@@ -59,4 +58,3 @@ final class BoostIntegrationService
         $this->contextProvider->addContext($context);
     }
 }
-

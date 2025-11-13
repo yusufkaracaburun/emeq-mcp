@@ -37,4 +37,3 @@ if (! function_exists('boost_add_context')) {
         app(BoostIntegrationService::class)->addContext($context);
     }
 }
-

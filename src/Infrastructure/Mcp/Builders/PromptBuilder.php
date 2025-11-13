@@ -9,9 +9,13 @@ use Emeq\McpLaravel\Infrastructure\Mcp\BasePrompt;
 final class PromptBuilder implements McpBuilderInterface
 {
     private string $name;
+
     private string $description;
+
     private array $arguments = [];
+
     private ?string $template = null;
+
     private ?string $handler = null;
 
     /**
@@ -81,8 +85,7 @@ final class PromptBuilder implements McpBuilderInterface
                 private readonly array $arguments,
                 private readonly ?PromptTemplate $template,
                 private readonly ?string $handler
-            ) {
-            }
+            ) {}
 
             public function getName(): string
             {
@@ -124,4 +127,3 @@ final class PromptBuilder implements McpBuilderInterface
         };
     }
 }
-

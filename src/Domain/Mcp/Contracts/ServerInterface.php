@@ -2,9 +2,6 @@
 
 namespace Emeq\McpLaravel\Domain\Mcp\Contracts;
 
-use Laravel\Mcp\Request;
-use Laravel\Mcp\Response;
-
 interface ServerInterface
 {
     /**
@@ -43,4 +40,3 @@ interface ServerInterface
      */
     public function registerPrompts(array $prompts): void;
 }
-

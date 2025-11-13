@@ -33,4 +33,3 @@ test('tool schema can get property', function () {
     expect($schema->getProperty('type'))->toBe('object')
         ->and($schema->getProperty('nonexistent', 'default'))->toBe('default');
 });
-

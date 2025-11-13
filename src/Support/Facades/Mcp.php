@@ -65,4 +65,3 @@ class Mcp extends Facade
         return app(McpRegistryService::class);
     }
 }
-

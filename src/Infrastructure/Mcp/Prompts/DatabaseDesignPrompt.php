@@ -62,4 +62,3 @@ final class DatabaseDesignPrompt extends BasePrompt
         return Response::text($rendered);
     }
 }
-

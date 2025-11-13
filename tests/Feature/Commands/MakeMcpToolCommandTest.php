@@ -21,4 +21,3 @@ test('make mcp tool command can generate tool', function () {
         File::delete($toolPath);
     }
 });
-

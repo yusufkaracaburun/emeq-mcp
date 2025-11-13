@@ -96,4 +96,3 @@ abstract class BaseServer extends Server
         return $this->prompts;
     }
 }
-

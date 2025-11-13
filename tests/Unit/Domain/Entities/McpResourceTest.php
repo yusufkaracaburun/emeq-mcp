@@ -24,4 +24,3 @@ test('mcp resource can be converted to array', function () {
         ->and($array['uri'])->toBe('laravel://test/resource')
         ->and($array['mimeType'])->toBe('application/json');
 });
-

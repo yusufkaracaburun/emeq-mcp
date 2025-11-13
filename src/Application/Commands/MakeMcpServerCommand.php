@@ -65,4 +65,3 @@ final class MakeMcpServerCommand extends Command
         return app('files');
     }
 }
-

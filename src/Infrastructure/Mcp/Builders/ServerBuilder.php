@@ -9,10 +9,15 @@ use Illuminate\Contracts\Config\Repository as ConfigRepository;
 final class ServerBuilder implements McpBuilderInterface
 {
     private string $name;
+
     private string $version;
+
     private string $instructions;
+
     private array $tools = [];
+
     private array $resources = [];
+
     private array $prompts = [];
 
     public function __construct(?ConfigRepository $config = null)
@@ -150,4 +155,3 @@ final class ServerBuilder implements McpBuilderInterface
         };
     }
 }
-

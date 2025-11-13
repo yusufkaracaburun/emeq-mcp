@@ -7,7 +7,7 @@ use Laravel\Mcp\Request;
 test('cache operation tool can get value', function () {
     Cache::put('test-key', 'test-value', 60);
 
-    $tool = new CacheOperationTool();
+    $tool = new CacheOperationTool;
     $request = \Mockery::mock(Request::class);
     $request->shouldReceive('arguments')->andReturn([
         'operation' => 'get',
@@ -20,7 +20,7 @@ test('cache operation tool can get value', function () {
 });
 
 test('cache operation tool can set value', function () {
-    $tool = new CacheOperationTool();
+    $tool = new CacheOperationTool;
     $request = \Mockery::mock(Request::class);
     $request->shouldReceive('arguments')->andReturn([
         'operation' => 'set',
@@ -37,7 +37,7 @@ test('cache operation tool can set value', function () {
 test('cache operation tool can forget value', function () {
     Cache::put('test-key', 'test-value', 60);
 
-    $tool = new CacheOperationTool();
+    $tool = new CacheOperationTool;
     $request = \Mockery::mock(Request::class);
     $request->shouldReceive('arguments')->andReturn([
         'operation' => 'forget',
@@ -53,7 +53,7 @@ test('cache operation tool can forget value', function () {
 test('cache operation tool returns error when disabled', function () {
     config()->set('emeq-mcp.tools.cache_operation.enabled', false);
 
-    $tool = new CacheOperationTool();
+    $tool = new CacheOperationTool;
     $request = \Mockery::mock(Request::class);
     $request->shouldReceive('arguments')->andReturn(['operation' => 'get', 'key' => 'test']);
 
@@ -62,4 +62,3 @@ test('cache operation tool returns error when disabled', function () {
     // Error responses should have error content
     expect($response)->toBeInstanceOf(\Laravel\Mcp\Response::class);
 });
-

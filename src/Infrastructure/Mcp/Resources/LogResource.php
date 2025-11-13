@@ -69,4 +69,3 @@ final class LogResource extends BaseResource
         return implode('', $recentLines)."\n\n---\nShowing {$linesToShow} of {$totalLines} lines";
     }
 }
-

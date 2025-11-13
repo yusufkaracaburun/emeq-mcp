@@ -101,4 +101,3 @@ abstract class BasePrompt extends Prompt implements PromptInterface
         };
     }
 }
-

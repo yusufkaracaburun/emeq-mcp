@@ -52,4 +52,3 @@ test('mcp server can check if it has components', function () {
 
     expect($server->hasComponents())->toBeTrue();
 });
-

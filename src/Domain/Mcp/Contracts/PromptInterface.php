@@ -32,4 +32,3 @@ interface PromptInterface
      */
     public function handle(Request $request): Response;
 }
-
