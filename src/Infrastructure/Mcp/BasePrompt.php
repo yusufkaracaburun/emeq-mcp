@@ -53,7 +53,7 @@ abstract class BasePrompt extends Prompt implements PromptInterface
     protected function validateArguments(array $arguments): array
     {
         $schema = $this->getArguments();
-        $rules  = $this->convertSchemaToRules($schema);
+        $rules = $this->convertSchemaToRules($schema);
 
         return Validator::make($arguments, $rules)->validate();
     }
@@ -96,9 +96,9 @@ abstract class BasePrompt extends Prompt implements PromptInterface
             'string' => 'string',
             'number', 'integer' => 'numeric',
             'boolean' => 'boolean',
-            'array'   => 'array',
-            'object'  => 'array',
-            default   => 'string',
+            'array' => 'array',
+            'object' => 'array',
+            default => 'string',
         };
     }
 
@@ -109,7 +109,7 @@ abstract class BasePrompt extends Prompt implements PromptInterface
      */
     protected function getBoostGuidelines(?string $context = null): array
     {
-        if ( ! config('emeq-mcp.boost.enabled', false)) {
+        if (! config('emeq-mcp.boost.enabled', false)) {
             return [];
         }
 
@@ -144,9 +144,9 @@ abstract class BasePrompt extends Prompt implements PromptInterface
                 }
 
                 if (isset($guideline['content'])) {
-                    $formatted .= $guideline['content'] . "\n\n";
+                    $formatted .= $guideline['content']."\n\n";
                 } elseif (isset($guideline['description'])) {
-                    $formatted .= $guideline['description'] . "\n\n";
+                    $formatted .= $guideline['description']."\n\n";
                 }
             } else {
                 $formatted .= "- {$guideline}\n";

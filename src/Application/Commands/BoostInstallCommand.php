@@ -17,7 +17,7 @@ final class BoostInstallCommand extends Command
         // Create guidelines directory
         $guidelinesPath = base_path('.boost/guidelines');
 
-        if ( ! is_dir($guidelinesPath)) {
+        if (! is_dir($guidelinesPath)) {
             mkdir($guidelinesPath, 0755, true);
             $this->info("Created guidelines directory: {$guidelinesPath}");
         }
@@ -26,7 +26,7 @@ final class BoostInstallCommand extends Command
         $this->updateConfig();
 
         $this->info('Boost integration installed successfully!');
-        $this->info('You can now add guidelines to: ' . $guidelinesPath);
+        $this->info('You can now add guidelines to: '.$guidelinesPath);
 
         return self::SUCCESS;
     }
@@ -35,7 +35,7 @@ final class BoostInstallCommand extends Command
     {
         $configPath = config_path('emeq-mcp.php');
 
-        if ( ! file_exists($configPath)) {
+        if (! file_exists($configPath)) {
             $this->warn('Config file not found. Please publish the config first: php artisan vendor:publish --tag=emeq-mcp-config');
 
             return;

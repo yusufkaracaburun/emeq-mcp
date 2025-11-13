@@ -23,15 +23,15 @@ final class DebuggingPrompt extends BasePrompt
     {
         return [
             'error_message' => [
-                'type'        => 'string',
+                'type' => 'string',
                 'description' => 'The error message or exception',
             ],
             'context' => [
-                'type'        => 'string',
+                'type' => 'string',
                 'description' => 'Additional context about the issue',
             ],
             'code_snippet' => [
-                'type'        => 'string',
+                'type' => 'string',
                 'description' => 'Relevant code snippet (optional)',
             ],
         ];
@@ -39,25 +39,25 @@ final class DebuggingPrompt extends BasePrompt
 
     public function handle(Request $request): Response
     {
-        if ( ! config('emeq-mcp.prompts.debugging.enabled', true)) {
+        if (! config('emeq-mcp.prompts.debugging.enabled', true)) {
             return Response::error('Debugging prompt is disabled.');
         }
 
         $arguments = $this->validateArguments($request->arguments());
-        $template  = $this->getTemplate();
+        $template = $this->getTemplate();
 
         // Get Boost guidelines for debugging context
-        $guidelines     = $this->getBoostGuidelines('debugging');
+        $guidelines = $this->getBoostGuidelines('debugging');
         $guidelinesText = $this->formatBoostGuidelines($guidelines);
 
         $rendered = $template->render([
             'error_message' => $arguments['error_message'] ?? 'No error message provided',
-            'context'       => $arguments['context'] ?? 'No additional context',
-            'code_snippet'  => $arguments['code_snippet'] ?? '',
+            'context' => $arguments['context'] ?? 'No additional context',
+            'code_snippet' => $arguments['code_snippet'] ?? '',
         ]);
 
         // Append Boost guidelines to the rendered prompt
-        if ( ! empty($guidelinesText)) {
+        if (! empty($guidelinesText)) {
             $rendered .= $guidelinesText;
         }
 

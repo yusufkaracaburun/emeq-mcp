@@ -23,15 +23,15 @@ final class CodeGenerationPrompt extends BasePrompt
     {
         return [
             'type' => [
-                'type'        => 'string',
+                'type' => 'string',
                 'description' => 'Type of code to generate (controller, model, migration, etc.)',
             ],
             'name' => [
-                'type'        => 'string',
+                'type' => 'string',
                 'description' => 'Name of the component to generate',
             ],
             'requirements' => [
-                'type'        => 'string',
+                'type' => 'string',
                 'description' => 'Additional requirements or specifications',
             ],
         ];
@@ -39,25 +39,25 @@ final class CodeGenerationPrompt extends BasePrompt
 
     public function handle(Request $request): Response
     {
-        if ( ! config('emeq-mcp.prompts.code_generation.enabled', true)) {
+        if (! config('emeq-mcp.prompts.code_generation.enabled', true)) {
             return Response::error('Code generation prompt is disabled.');
         }
 
         $arguments = $this->validateArguments($request->arguments());
-        $template  = $this->getTemplate();
+        $template = $this->getTemplate();
 
         // Get Boost guidelines for code generation context
-        $guidelines     = $this->getBoostGuidelines('code-generation');
+        $guidelines = $this->getBoostGuidelines('code-generation');
         $guidelinesText = $this->formatBoostGuidelines($guidelines);
 
         $rendered = $template->render([
-            'type'         => $arguments['type'] ?? 'component',
-            'name'         => $arguments['name'] ?? 'Component',
+            'type' => $arguments['type'] ?? 'component',
+            'name' => $arguments['name'] ?? 'Component',
             'requirements' => $arguments['requirements'] ?? 'No specific requirements',
         ]);
 
         // Append Boost guidelines to the rendered prompt
-        if ( ! empty($guidelinesText)) {
+        if (! empty($guidelinesText)) {
             $rendered .= $guidelinesText;
         }
 

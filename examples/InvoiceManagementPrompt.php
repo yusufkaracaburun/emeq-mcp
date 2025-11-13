@@ -45,7 +45,7 @@ final class InvoiceManagementPrompt extends BasePrompt
         $template = $this->getTemplate();
 
         // Get Boost guidelines for invoice management context (optional)
-        $guidelines     = $this->getBoostGuidelines('invoice-management');
+        $guidelines = $this->getBoostGuidelines('invoice-management');
         $guidelinesText = $this->formatBoostGuidelines($guidelines);
 
         $rendered = $template->render([
@@ -54,7 +54,7 @@ final class InvoiceManagementPrompt extends BasePrompt
         ]);
 
         // Append Boost guidelines if available
-        if ( ! empty($guidelinesText)) {
+        if (! empty($guidelinesText)) {
             $rendered .= $guidelinesText;
         }
 

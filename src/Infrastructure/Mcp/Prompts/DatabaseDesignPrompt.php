@@ -23,15 +23,15 @@ final class DatabaseDesignPrompt extends BasePrompt
     {
         return [
             'requirements' => [
-                'type'        => 'string',
+                'type' => 'string',
                 'description' => 'Database requirements and specifications',
             ],
             'existing_schema' => [
-                'type'        => 'string',
+                'type' => 'string',
                 'description' => 'Existing database schema (optional)',
             ],
             'relationships' => [
-                'type'        => 'string',
+                'type' => 'string',
                 'description' => 'Required relationships between entities',
             ],
         ];
@@ -39,25 +39,25 @@ final class DatabaseDesignPrompt extends BasePrompt
 
     public function handle(Request $request): Response
     {
-        if ( ! config('emeq-mcp.prompts.database_design.enabled', true)) {
+        if (! config('emeq-mcp.prompts.database_design.enabled', true)) {
             return Response::error('Database design prompt is disabled.');
         }
 
         $arguments = $this->validateArguments($request->arguments());
-        $template  = $this->getTemplate();
+        $template = $this->getTemplate();
 
         // Get Boost guidelines for database design context
-        $guidelines     = $this->getBoostGuidelines('database-design');
+        $guidelines = $this->getBoostGuidelines('database-design');
         $guidelinesText = $this->formatBoostGuidelines($guidelines);
 
         $rendered = $template->render([
-            'requirements'    => $arguments['requirements'] ?? 'No requirements specified',
-            'relationships'   => $arguments['relationships'] ?? '',
+            'requirements' => $arguments['requirements'] ?? 'No requirements specified',
+            'relationships' => $arguments['relationships'] ?? '',
             'existing_schema' => $arguments['existing_schema'] ?? '',
         ]);
 
         // Append Boost guidelines to the rendered prompt
-        if ( ! empty($guidelinesText)) {
+        if (! empty($guidelinesText)) {
             $rendered .= $guidelinesText;
         }
 
