@@ -3,7 +3,10 @@
 namespace Emeq\McpLaravel\Infrastructure\Mcp\Tools;
 
 use Emeq\McpLaravel\Infrastructure\Mcp\BaseTool;
+use Exception;
+use Illuminate\JsonSchema\JsonSchema;
 use Illuminate\Support\Facades\Queue;
+use InvalidArgumentException;
 use Laravel\Mcp\Request;
 use Laravel\Mcp\Response;
 
@@ -19,26 +22,26 @@ final class QueueJobTool extends BaseTool
         return 'Dispatch jobs to the queue or check queue status.';
     }
 
-    public function getInputSchema(): array
+    public function getInputSchema(JsonSchema $schema): array
     {
         return [
-            'type' => 'object',
+            'type'       => 'object',
             'properties' => [
                 'operation' => [
-                    'type' => 'string',
+                    'type'        => 'string',
                     'description' => 'The operation to perform: dispatch, status',
-                    'enum' => ['dispatch', 'status'],
+                    'enum'        => ['dispatch', 'status'],
                 ],
                 'job_class' => [
-                    'type' => 'string',
+                    'type'        => 'string',
                     'description' => 'The job class name (required for dispatch)',
                 ],
                 'data' => [
-                    'type' => 'object',
+                    'type'        => 'object',
                     'description' => 'Job data (optional for dispatch)',
                 ],
                 'queue' => [
-                    'type' => 'string',
+                    'type'        => 'string',
                     'description' => 'Queue name (optional)',
                 ],
             ],
@@ -48,7 +51,7 @@ final class QueueJobTool extends BaseTool
 
     public function handle(Request $request): Response
     {
-        if (! config('emeq-mcp.tools.queue_job.enabled', true)) {
+        if ( ! config('emeq-mcp.tools.queue_job.enabled', true)) {
             return Response::error('Queue job tool is disabled.');
         }
 
@@ -58,12 +61,12 @@ final class QueueJobTool extends BaseTool
         try {
             $result = match ($operation) {
                 'dispatch' => $this->dispatchJob($arguments),
-                'status' => $this->getQueueStatus(),
-                default => throw new \InvalidArgumentException("Unknown operation: {$operation}"),
+                'status'   => $this->getQueueStatus(),
+                default    => throw new InvalidArgumentException("Unknown operation: {$operation}"),
             };
 
             return Response::text(json_encode($result, JSON_PRETTY_PRINT));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return Response::error("Queue operation failed: {$e->getMessage()}");
         }
     }
@@ -77,14 +80,16 @@ final class QueueJobTool extends BaseTool
     private function dispatchJob(array $arguments): array
     {
         $jobClass = $arguments['job_class'] ?? null;
-        if (! $jobClass || ! class_exists($jobClass)) {
-            throw new \InvalidArgumentException("Invalid job class: {$jobClass}");
+
+        if ( ! $jobClass || ! class_exists($jobClass)) {
+            throw new InvalidArgumentException("Invalid job class: {$jobClass}");
         }
 
-        $data = $arguments['data'] ?? [];
+        $data  = $arguments['data'] ?? [];
         $queue = $arguments['queue'] ?? null;
 
         $job = new $jobClass($data);
+
         if ($queue) {
             dispatch($job)->onQueue($queue);
         } else {
@@ -94,8 +99,8 @@ final class QueueJobTool extends BaseTool
         return [
             'operation' => 'dispatch',
             'job_class' => $jobClass,
-            'success' => true,
-            'message' => 'Job dispatched successfully.',
+            'success'   => true,
+            'message'   => 'Job dispatched successfully.',
         ];
     }
 
@@ -109,9 +114,9 @@ final class QueueJobTool extends BaseTool
         $connection = config('queue.default');
 
         return [
-            'operation' => 'status',
+            'operation'  => 'status',
             'connection' => $connection,
-            'driver' => config("queue.connections.{$connection}.driver"),
+            'driver'     => config("queue.connections.{$connection}.driver"),
         ];
     }
 }
