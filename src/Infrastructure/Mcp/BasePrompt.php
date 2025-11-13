@@ -4,6 +4,7 @@ namespace Emeq\McpLaravel\Infrastructure\Mcp;
 
 use Emeq\McpLaravel\Domain\Mcp\Contracts\PromptInterface;
 use Emeq\McpLaravel\Domain\Mcp\ValueObjects\PromptTemplate;
+use Exception;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Mcp\Request;
 use Laravel\Mcp\Response;
@@ -52,7 +53,7 @@ abstract class BasePrompt extends Prompt implements PromptInterface
     protected function validateArguments(array $arguments): array
     {
         $schema = $this->getArguments();
-        $rules = $this->convertSchemaToRules($schema);
+        $rules  = $this->convertSchemaToRules($schema);
 
         return Validator::make($arguments, $rules)->validate();
     }
@@ -95,9 +96,63 @@ abstract class BasePrompt extends Prompt implements PromptInterface
             'string' => 'string',
             'number', 'integer' => 'numeric',
             'boolean' => 'boolean',
-            'array' => 'array',
-            'object' => 'array',
-            default => 'string',
+            'array'   => 'array',
+            'object'  => 'array',
+            default   => 'string',
         };
+    }
+
+    /**
+     * Get Boost guidelines for a specific context.
+     *
+     * @return array<string, mixed>
+     */
+    protected function getBoostGuidelines(?string $context = null): array
+    {
+        if ( ! config('emeq-mcp.boost.enabled', false)) {
+            return [];
+        }
+
+        try {
+            $boostService = app(\Emeq\McpLaravel\Application\Services\BoostIntegrationService::class);
+
+            return $context
+                ? $boostService->getGuidelinesForContext($context)
+                : $boostService->getGuidelines();
+        } catch (Exception $e) {
+            // If Boost is not available, return empty array
+            return [];
+        }
+    }
+
+    /**
+     * Format Boost guidelines as a string for inclusion in prompts.
+     */
+    protected function formatBoostGuidelines(array $guidelines): string
+    {
+        if (empty($guidelines)) {
+            return '';
+        }
+
+        $formatted = "\n\n## Project Guidelines\n\n";
+        $formatted .= "Please follow these project-specific guidelines:\n\n";
+
+        foreach ($guidelines as $guideline) {
+            if (is_array($guideline)) {
+                if (isset($guideline['title'])) {
+                    $formatted .= "### {$guideline['title']}\n\n";
+                }
+
+                if (isset($guideline['content'])) {
+                    $formatted .= $guideline['content'] . "\n\n";
+                } elseif (isset($guideline['description'])) {
+                    $formatted .= $guideline['description'] . "\n\n";
+                }
+            } else {
+                $formatted .= "- {$guideline}\n";
+            }
+        }
+
+        return $formatted;
     }
 }

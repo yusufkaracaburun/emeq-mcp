@@ -44,10 +44,19 @@ final class InvoiceManagementPrompt extends BasePrompt
         $arguments = $this->validateArguments($request->arguments());
         $template  = $this->getTemplate();
 
+        // Get Boost guidelines for invoice management context (optional)
+        $guidelines     = $this->getBoostGuidelines('invoice-management');
+        $guidelinesText = $this->formatBoostGuidelines($guidelines);
+
         $rendered = $template->render([
             'task'    => $arguments['task'] ?? 'invoice management',
             'context' => $arguments['context'] ?? 'No specific context provided',
         ]);
+
+        // Append Boost guidelines if available
+        if ( ! empty($guidelinesText)) {
+            $rendered .= $guidelinesText;
+        }
 
         return Response::text($rendered);
     }

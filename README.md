@@ -760,7 +760,7 @@ Each server handle corresponds to the first argument passed to `Mcp::local()` in
 The main configuration file is located at `config/emeq-mcp.php`. Key settings include:
 
 - `auto_register`: Automatically register pre-built components (default: `true`)
-- `boost.enabled`: Enable Boost integration (default: `false`)
+- `boost.enabled`: Enable Boost integration (default: `true`)
 - `boost.guidelines_path`: Path to Boost guidelines directory (default: `.boost/guidelines`)
 - `server.default_name`: Default MCP server name
 - `server.default_version`: Default MCP server version
@@ -773,8 +773,8 @@ All configuration options can be overridden using environment variables:
 # General
 EMEQ_MCP_AUTO_REGISTER=true
 
-# Boost Integration
-EMEQ_MCP_BOOST_ENABLED=false
+# Boost Integration (enabled by default)
+EMEQ_MCP_BOOST_ENABLED=true
 EMEQ_MCP_BOOST_GUIDELINES_PATH=.boost/guidelines
 
 # MCP Server Configuration
@@ -868,20 +868,134 @@ $tool = Mcp::tool()
 
 ## Boost Integration
 
+Laravel Boost integration allows your MCP prompts to automatically include project-specific guidelines and best practices, ensuring AI assistants follow your coding standards and conventions.
+
+### Installation
+
 Install Boost integration:
 
 ```bash
 php artisan mcp:boost-install
 ```
 
-Use Boost guidelines:
+This command:
+
+- Creates the `.boost/guidelines/` directory
+- Enables Boost in your configuration
+
+### Configuration
+
+Boost is **enabled by default**. You can disable it in your `.env` file if needed:
+
+```env
+# Boost is enabled by default, set to false to disable
+EMEQ_MCP_BOOST_ENABLED=false
+EMEQ_MCP_BOOST_GUIDELINES_PATH=.boost/guidelines
+```
+
+### Creating Guidelines
+
+Create JSON guideline files in `.boost/guidelines/` directory. Guidelines can be context-specific:
+
+**Example: `.boost/guidelines/code-generation.json`**
+
+```json
+[
+    {
+        "title": "Laravel Code Style",
+        "content": "Always use PSR-12 coding standards. Use type hints for all method parameters and return types.",
+        "context": "code-generation"
+    },
+    {
+        "title": "Model Conventions",
+        "content": "Use Eloquent relationships instead of manual joins. Always define return type hints for relationships.",
+        "context": "code-generation"
+    }
+]
+```
+
+**Example: `.boost/guidelines/debugging.json`**
+
+```json
+[
+    {
+        "title": "Error Handling",
+        "content": "Always log errors with context. Use Laravel's exception handling mechanisms.",
+        "context": "debugging"
+    }
+]
+```
+
+### Automatic Integration
+
+Boost guidelines are **automatically integrated** into all built-in prompts:
+
+- **CodeGenerationPrompt**: Includes guidelines when generating code
+- **DebuggingPrompt**: Includes guidelines when debugging issues
+- **DatabaseDesignPrompt**: Includes guidelines when designing schemas
+
+When you use these prompts through your AI assistant, they automatically include your project guidelines.
+
+### Using Boost in Custom Prompts
+
+You can use Boost guidelines in your custom prompts by extending `BasePrompt`:
+
+```php
+<?php
+
+namespace App\Mcp\Prompts;
+
+use Emeq\McpLaravel\Infrastructure\Mcp\BasePrompt;
+use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+
+final class MyCustomPrompt extends BasePrompt
+{
+    public function handle(Request $request): Response
+    {
+        // Get guidelines for a specific context
+        $guidelines = $this->getBoostGuidelines('my-context');
+
+        // Format guidelines for inclusion in prompt
+        $guidelinesText = $this->formatBoostGuidelines($guidelines);
+
+        // Include guidelines in your prompt
+        $prompt = "Your prompt text here...";
+        $prompt .= $guidelinesText;
+
+        return Response::text($prompt);
+    }
+
+    // ... other required methods
+}
+```
+
+### Programmatic Access
+
+Access Boost guidelines programmatically:
 
 ```php
 use Emeq\McpLaravel\Support\Facades\Boost;
 
+// Get all guidelines
 $guidelines = Boost::getGuidelines();
+
+// Get guidelines for a specific context
 $contextGuidelines = Boost::getGuidelinesForContext('code-generation');
+
+// Add custom context
+Boost::addContext([
+    'current_feature' => 'invoice-management',
+    'team_standards' => 'strict-typing',
+]);
 ```
+
+### Benefits
+
+- **Consistency**: AI-generated code follows your project standards
+- **Context-Aware**: Different guidelines for different scenarios
+- **Automatic**: No need to manually include guidelines in every prompt
+- **Maintainable**: Update guidelines in one place, affects all prompts
 
 ## Commands
 

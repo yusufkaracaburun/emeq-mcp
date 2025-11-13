@@ -23,18 +23,45 @@ final class DatabaseDesignPrompt extends BasePrompt
     {
         return [
             'requirements' => [
-                'type' => 'string',
+                'type'        => 'string',
                 'description' => 'Database requirements and specifications',
             ],
             'existing_schema' => [
-                'type' => 'string',
+                'type'        => 'string',
                 'description' => 'Existing database schema (optional)',
             ],
             'relationships' => [
-                'type' => 'string',
+                'type'        => 'string',
                 'description' => 'Required relationships between entities',
             ],
         ];
+    }
+
+    public function handle(Request $request): Response
+    {
+        if ( ! config('emeq-mcp.prompts.database_design.enabled', true)) {
+            return Response::error('Database design prompt is disabled.');
+        }
+
+        $arguments = $this->validateArguments($request->arguments());
+        $template  = $this->getTemplate();
+
+        // Get Boost guidelines for database design context
+        $guidelines     = $this->getBoostGuidelines('database-design');
+        $guidelinesText = $this->formatBoostGuidelines($guidelines);
+
+        $rendered = $template->render([
+            'requirements'    => $arguments['requirements'] ?? 'No requirements specified',
+            'relationships'   => $arguments['relationships'] ?? '',
+            'existing_schema' => $arguments['existing_schema'] ?? '',
+        ]);
+
+        // Append Boost guidelines to the rendered prompt
+        if ( ! empty($guidelinesText)) {
+            $rendered .= $guidelinesText;
+        }
+
+        return Response::text($rendered);
     }
 
     protected function getTemplate(): PromptTemplate
@@ -42,23 +69,5 @@ final class DatabaseDesignPrompt extends BasePrompt
         return new PromptTemplate(
             "Help me design a database schema for Laravel:\n\nRequirements:\n{{requirements}}\n\n{{#relationships}}Relationships:\n{{relationships}}\n{{/relationships}}\n\n{{#existing_schema}}Existing Schema:\n{{existing_schema}}\n{{/existing_schema}}\n\nPlease provide:\n1. Table structure with columns and types\n2. Migration code\n3. Model relationships\n4. Indexes and constraints\n5. Best practices recommendations"
         );
-    }
-
-    public function handle(Request $request): Response
-    {
-        if (! config('emeq-mcp.prompts.database_design.enabled', true)) {
-            return Response::error('Database design prompt is disabled.');
-        }
-
-        $arguments = $this->validateArguments($request->arguments());
-        $template = $this->getTemplate();
-
-        $rendered = $template->render([
-            'requirements' => $arguments['requirements'] ?? 'No requirements specified',
-            'relationships' => $arguments['relationships'] ?? '',
-            'existing_schema' => $arguments['existing_schema'] ?? '',
-        ]);
-
-        return Response::text($rendered);
     }
 }

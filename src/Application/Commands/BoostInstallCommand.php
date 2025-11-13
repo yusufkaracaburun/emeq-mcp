@@ -16,7 +16,8 @@ final class BoostInstallCommand extends Command
 
         // Create guidelines directory
         $guidelinesPath = base_path('.boost/guidelines');
-        if (! is_dir($guidelinesPath)) {
+
+        if ( ! is_dir($guidelinesPath)) {
             mkdir($guidelinesPath, 0755, true);
             $this->info("Created guidelines directory: {$guidelinesPath}");
         }
@@ -25,7 +26,7 @@ final class BoostInstallCommand extends Command
         $this->updateConfig();
 
         $this->info('Boost integration installed successfully!');
-        $this->info('You can now add guidelines to: '.$guidelinesPath);
+        $this->info('You can now add guidelines to: ' . $guidelinesPath);
 
         return self::SUCCESS;
     }
@@ -34,7 +35,7 @@ final class BoostInstallCommand extends Command
     {
         $configPath = config_path('emeq-mcp.php');
 
-        if (! file_exists($configPath)) {
+        if ( ! file_exists($configPath)) {
             $this->warn('Config file not found. Please publish the config first: php artisan vendor:publish --tag=emeq-mcp-config');
 
             return;
@@ -42,8 +43,9 @@ final class BoostInstallCommand extends Command
 
         $config = file_get_contents($configPath);
 
-        // Enable Boost if not already enabled
-        if (! str_contains($config, "'enabled' => true")) {
+        // Note: Boost is now enabled by default in the config file
+        // This check ensures it's enabled if someone has an old config
+        if (str_contains($config, "'enabled' => env('EMEQ_MCP_BOOST_ENABLED', false),")) {
             $config = str_replace(
                 "'enabled' => env('EMEQ_MCP_BOOST_ENABLED', false),",
                 "'enabled' => env('EMEQ_MCP_BOOST_ENABLED', true),",

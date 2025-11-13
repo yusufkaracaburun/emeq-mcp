@@ -24,7 +24,7 @@ return [
     */
 
     'boost' => [
-        'enabled' => env('EMEQ_MCP_BOOST_ENABLED', false),
+        'enabled' => env('EMEQ_MCP_BOOST_ENABLED', true),
         'guidelines_path' => env('EMEQ_MCP_BOOST_GUIDELINES_PATH', base_path('.boost/guidelines')),
         'context_providers' => [
             // Add custom context providers here
