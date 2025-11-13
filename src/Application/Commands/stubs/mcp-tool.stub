@@ -1,0 +1,41 @@
+<?php
+
+namespace {{namespace}};
+
+use Emeq\McpLaravel\Infrastructure\Mcp\BaseTool;
+use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+
+final class {{class}} extends BaseTool
+{
+    public function getName(): string
+    {
+        return '{{name}}';
+    }
+
+    public function getDescription(): string
+    {
+        return 'Description of what this tool does.';
+    }
+
+    public function getInputSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'properties' => [
+                // Add your tool parameters here
+            ],
+            'required' => [],
+        ];
+    }
+
+    public function handle(Request $request): Response
+    {
+        $arguments = $this->validateArguments($request->arguments());
+
+        // Implement your tool logic here
+
+        return Response::text('Tool executed successfully.');
+    }
+}
+

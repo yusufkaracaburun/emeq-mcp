@@ -1,0 +1,20 @@
+<?php
+
+use Laravel\Mcp\Facades\Mcp;
+
+/*
+|--------------------------------------------------------------------------
+| MCP Routes
+|--------------------------------------------------------------------------
+|
+| Here you can register your MCP servers. Each server can expose
+| tools, resources, and prompts to AI clients.
+|
+*/
+
+// Example: Register a server
+// Mcp::web('/mcp/your-server', YourServer::class);
+
+// Example: Register a local server
+// Mcp::local('your-server', YourServer::class);
+

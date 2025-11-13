@@ -1,0 +1,37 @@
+<?php
+
+namespace {{namespace}};
+
+use Emeq\McpLaravel\Infrastructure\Mcp\BasePrompt;
+use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+
+final class {{class}} extends BasePrompt
+{
+    public function getName(): string
+    {
+        return '{{name}}';
+    }
+
+    public function getDescription(): string
+    {
+        return 'Description of what this prompt does.';
+    }
+
+    public function getArguments(): array
+    {
+        return [
+            // Add your prompt arguments here
+        ];
+    }
+
+    public function handle(Request $request): Response
+    {
+        $arguments = $this->validateArguments($request->arguments());
+
+        // Implement your prompt logic here
+
+        return Response::text('Prompt executed successfully.');
+    }
+}
+

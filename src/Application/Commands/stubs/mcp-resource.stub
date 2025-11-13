@@ -1,0 +1,38 @@
+<?php
+
+namespace {{namespace}};
+
+use Emeq\McpLaravel\Infrastructure\Mcp\BaseResource;
+use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+
+final class {{class}} extends BaseResource
+{
+    public function getUri(): string
+    {
+        return '{{uri}}';
+    }
+
+    public function getName(): string
+    {
+        return '{{name}}';
+    }
+
+    public function getDescription(): string
+    {
+        return 'Description of what this resource provides.';
+    }
+
+    public function getMimeType(): string
+    {
+        return 'application/json';
+    }
+
+    public function handle(Request $request): Response
+    {
+        // Implement your resource logic here
+
+        return Response::text(json_encode(['data' => 'Resource data']));
+    }
+}
+
