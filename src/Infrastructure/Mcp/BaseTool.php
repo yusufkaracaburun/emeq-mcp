@@ -3,6 +3,7 @@
 namespace Emeq\McpLaravel\Infrastructure\Mcp;
 
 use Emeq\McpLaravel\Domain\Mcp\Contracts\ToolInterface;
+use Illuminate\JsonSchema\JsonSchema;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Mcp\Request;
 use Laravel\Mcp\Response;
@@ -25,7 +26,7 @@ abstract class BaseTool extends Tool implements ToolInterface
      *
      * @return array<string, mixed>
      */
-    abstract public function getInputSchema(): array;
+    abstract public function getInputSchema(JsonSchema $schema): array;
 
     /**
      * Handle the tool request.
@@ -43,7 +44,7 @@ abstract class BaseTool extends Tool implements ToolInterface
     protected function validateArguments(array $arguments): array
     {
         $schema = $this->getInputSchema();
-        $rules = $this->convertSchemaToRules($schema);
+        $rules  = $this->convertSchemaToRules($schema);
 
         return Validator::make($arguments, $rules)->validate();
     }
@@ -88,9 +89,9 @@ abstract class BaseTool extends Tool implements ToolInterface
             'string' => 'string',
             'number', 'integer' => 'numeric',
             'boolean' => 'boolean',
-            'array' => 'array',
-            'object' => 'array',
-            default => 'string',
+            'array'   => 'array',
+            'object'  => 'array',
+            default   => 'string',
         };
     }
 }

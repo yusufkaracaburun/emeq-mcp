@@ -2,6 +2,7 @@
 
 namespace Emeq\McpLaravel\Domain\Mcp\Contracts;
 
+use Illuminate\JsonSchema\JsonSchema;
 use Laravel\Mcp\Request;
 use Laravel\Mcp\Response;
 
@@ -22,7 +23,7 @@ interface ToolInterface
      *
      * @return array<string, mixed>
      */
-    public function getInputSchema(): array;
+    public function getInputSchema(JsonSchema $schema): array;
 
     /**
      * Handle the tool request.
