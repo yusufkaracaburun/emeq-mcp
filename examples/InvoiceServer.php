@@ -2,6 +2,8 @@
 
 namespace App\Mcp\Servers;
 
+use App\Mcp\Prompts\InvoiceManagementPrompt;
+use App\Mcp\Resources\InvoiceSchemaResource;
 use App\Mcp\Tools\GetInvoiceTool;
 use App\Mcp\Tools\ListInvoicesTool;
 use Emeq\McpLaravel\Infrastructure\Mcp\BaseServer;
@@ -14,25 +16,37 @@ use Emeq\McpLaravel\Infrastructure\Mcp\BaseServer;
  *
  * Usage:
  * 1. Create the tools: GetInvoiceTool and ListInvoicesTool
- * 2. Register this server in routes/ai.php
- * 3. Your AI assistant can now answer questions about invoices
+ * 2. Create the resource: InvoiceSchemaResource
+ * 3. Create the prompt: InvoiceManagementPrompt
+ * 4. Register this server in routes/ai.php
+ * 5. Your AI assistant can now answer questions about invoices
  */
 final class InvoiceServer extends BaseServer
 {
     public function __construct()
     {
-        $this->name = 'Invoice MCP Server';
-        $this->version = '1.0.0';
-        $this->instructions = 'You are an AI assistant for invoice management. '.
-            'You can help users retrieve invoice information and list invoices with filters. '.
-            'Always provide clear and accurate information. '.
-            'When listing invoices, provide summaries. '.
+        $this->name         = 'Invoice MCP Server';
+        $this->version      = '1.0.0';
+        $this->instructions = 'You are an AI assistant for invoice management. ' .
+            'You can help users retrieve invoice information and list invoices with filters. ' .
+            'Always provide clear and accurate information. ' .
+            'When listing invoices, provide summaries. ' .
             'When getting an invoice, provide all relevant details.';
 
         // Register invoice tools
         $this->tools = [
             GetInvoiceTool::class,
             ListInvoicesTool::class,
+        ];
+
+        // Register invoice resources
+        $this->resources = [
+            InvoiceSchemaResource::class,
+        ];
+
+        // Register invoice prompts
+        $this->prompts = [
+            InvoiceManagementPrompt::class,
         ];
     }
 }

@@ -7,12 +7,12 @@ Laravel package for MCP (Model Context Protocol) with Boost integration, providi
 
 ## Features
 
--   **Helper Utilities**: Fluent builders for creating MCP servers, tools, resources, and prompts
--   **Pre-built Components**: Ready-to-use tools, resources, and prompts for common Laravel operations
--   **Boost Integration**: Seamless integration with Laravel Boost for AI guidelines and development tools
--   **Domain-Driven Design**: Clean architecture following DDD principles
--   **SOLID Principles**: Well-structured, maintainable codebase
--   **Type Safety**: Value objects for enhanced type safety
+- **Helper Utilities**: Fluent builders for creating MCP servers, tools, resources, and prompts
+- **Pre-built Components**: Ready-to-use tools, resources, and prompts for common Laravel operations
+- **Boost Integration**: Seamless integration with Laravel Boost for AI guidelines and development tools
+- **Domain-Driven Design**: Clean architecture following DDD principles
+- **SOLID Principles**: Well-structured, maintainable codebase
+- **Type Safety**: Value objects for enhanced type safety
 
 ## Installation
 
@@ -40,7 +40,7 @@ This creates `routes/ai.php` where you can register your MCP servers.
 
 ## Quick Start: Creating an Invoice Server
 
-Let's create a complete Invoice MCP server with tools to get and list invoices.
+Let's create a complete Invoice MCP server with tools, resources, and prompts to get and list invoices, provide schema information, and assist with invoice management.
 
 ### Step 1: Create the Invoice Server
 
@@ -48,34 +48,7 @@ Let's create a complete Invoice MCP server with tools to get and list invoices.
 php artisan make:mcp-server InvoiceServer
 ```
 
-This creates `app/Mcp/Servers/InvoiceServer.php`. Edit it:
-
-```php
-<?php
-
-namespace App\Mcp\Servers;
-
-use App\Mcp\Tools\GetInvoiceTool;
-use App\Mcp\Tools\ListInvoicesTool;
-use Emeq\McpLaravel\Infrastructure\Mcp\BaseServer;
-
-final class InvoiceServer extends BaseServer
-{
-    public function __construct()
-    {
-        $this->name = 'Invoice MCP Server';
-        $this->version = '1.0.0';
-        $this->instructions = 'You are an AI assistant for invoice management. ' .
-            'You can help users retrieve invoice information and list invoices with filters. ' .
-            'Always provide clear and accurate information.';
-
-        $this->tools = [
-            GetInvoiceTool::class,
-            ListInvoicesTool::class,
-        ];
-    }
-}
-```
+This creates `app/Mcp/Servers/InvoiceServer.php`. We'll update it in Step 5 after creating the tools, resources, and prompts.
 
 ### Step 2: Create Invoice Tools
 
@@ -331,7 +304,262 @@ final class ListInvoicesTool extends BaseTool
 }
 ```
 
-### Step 3: Register the Server
+### Step 3: Create Invoice Resources
+
+#### Invoice Schema Resource
+
+```bash
+php artisan make:mcp-resource InvoiceSchema
+```
+
+Edit `app/Mcp/Resources/InvoiceSchemaResource.php`:
+
+```php
+<?php
+
+namespace App\Mcp\Resources;
+
+use App\Models\Invoice;
+use Emeq\McpLaravel\Infrastructure\Mcp\BaseResource;
+use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+
+final class InvoiceSchemaResource extends BaseResource
+{
+    public function getUri(): string
+    {
+        return 'invoice://schema';
+    }
+
+    public function getName(): string
+    {
+        return 'Invoice Schema';
+    }
+
+    public function getDescription(): string
+    {
+        return 'Get the schema information for the Invoice model, including fields, relationships, and status values.';
+    }
+
+    public function getMimeType(): string
+    {
+        return 'application/json';
+    }
+
+    public function handle(Request $request): Response
+    {
+        try {
+            $schema = $this->getInvoiceSchema();
+
+            return Response::text(json_encode($schema, JSON_PRETTY_PRINT));
+        } catch (\Exception $e) {
+            return Response::error("Failed to get invoice schema: {$e->getMessage()}");
+        }
+    }
+
+    private function getInvoiceSchema(): array
+    {
+        $model = new Invoice();
+        $table = $model->getTable();
+
+        return [
+            'model' => Invoice::class,
+            'table' => $table,
+            'fields' => [
+                'id' => [
+                    'type' => 'integer',
+                    'description' => 'Primary key',
+                ],
+                'invoice_number' => [
+                    'type' => 'string',
+                    'description' => 'Invoice number (e.g., INV-2025-001)',
+                ],
+                'customer_id' => [
+                    'type' => 'integer',
+                    'description' => 'Foreign key to customers table',
+                ],
+                'status' => [
+                    'type' => 'enum',
+                    'values' => ['draft', 'sent', 'paid', 'overdue', 'cancelled'],
+                    'description' => 'Invoice status',
+                ],
+                'issue_date' => [
+                    'type' => 'date',
+                    'description' => 'Invoice issue date',
+                ],
+                'due_date' => [
+                    'type' => 'date',
+                    'description' => 'Invoice due date',
+                ],
+                'subtotal' => [
+                    'type' => 'decimal',
+                    'description' => 'Subtotal amount before tax',
+                ],
+                'tax' => [
+                    'type' => 'decimal',
+                    'description' => 'Tax amount',
+                ],
+                'total' => [
+                    'type' => 'decimal',
+                    'description' => 'Total invoice amount',
+                ],
+                'paid_amount' => [
+                    'type' => 'decimal',
+                    'description' => 'Total amount paid',
+                ],
+                'balance' => [
+                    'type' => 'decimal',
+                    'description' => 'Remaining balance (total - paid_amount)',
+                ],
+            ],
+            'relationships' => [
+                'customer' => [
+                    'type' => 'BelongsTo',
+                    'model' => 'App\Models\Customer',
+                    'description' => 'The customer associated with this invoice',
+                ],
+                'items' => [
+                    'type' => 'HasMany',
+                    'model' => 'App\Models\InvoiceItem',
+                    'description' => 'Line items on the invoice',
+                ],
+                'payments' => [
+                    'type' => 'HasMany',
+                    'model' => 'App\Models\Payment',
+                    'description' => 'Payments made against this invoice',
+                ],
+            ],
+            'status_values' => [
+                'draft' => 'Invoice is in draft state',
+                'sent' => 'Invoice has been sent to the customer',
+                'paid' => 'Invoice has been fully paid',
+                'overdue' => 'Invoice is past its due date',
+                'cancelled' => 'Invoice has been cancelled',
+            ],
+        ];
+    }
+}
+```
+
+### Step 4: Create Invoice Prompts
+
+#### Invoice Management Prompt
+
+```bash
+php artisan make:mcp-prompt InvoiceManagement
+```
+
+Edit `app/Mcp/Prompts/InvoiceManagementPrompt.php`:
+
+```php
+<?php
+
+namespace App\Mcp\Prompts;
+
+use Emeq\McpLaravel\Domain\Mcp\ValueObjects\PromptTemplate;
+use Emeq\McpLaravel\Infrastructure\Mcp\BasePrompt;
+use Laravel\Mcp\Request;
+use Laravel\Mcp\Response;
+
+final class InvoiceManagementPrompt extends BasePrompt
+{
+    public function getName(): string
+    {
+        return 'invoice-management';
+    }
+
+    public function getDescription(): string
+    {
+        return 'Get assistance with invoice management tasks, including creating, updating, and managing invoices.';
+    }
+
+    public function getArguments(): array
+    {
+        return [
+            'task' => [
+                'type' => 'string',
+                'description' => 'The invoice management task (create, update, send, cancel, etc.)',
+            ],
+            'context' => [
+                'type' => 'string',
+                'description' => 'Additional context or requirements for the task',
+            ],
+        ];
+    }
+
+    protected function getTemplate(): PromptTemplate
+    {
+        return new PromptTemplate(
+            "You are assisting with invoice management in a Laravel application.\n\n" .
+            "Task: {{task}}\n\n" .
+            "Context: {{context}}\n\n" .
+            "The Invoice model has the following key features:\n" .
+            "- Invoice numbers are formatted as INV-YYYY-SEQ (e.g., INV-2025-001)\n" .
+            "- Status values: draft, sent, paid, overdue, cancelled\n" .
+            "- Relationships: customer, items (line items), payments\n" .
+            "- Financial fields: subtotal, tax, total, paid_amount, balance\n" .
+            "- Dates: issue_date (when invoice was created), due_date (payment deadline)\n\n" .
+            "Provide clear, accurate guidance following Laravel best practices."
+        );
+    }
+
+    public function handle(Request $request): Response
+    {
+        $arguments = $this->validateArguments($request->arguments());
+        $template = $this->getTemplate();
+
+        $rendered = $template->render([
+            'task' => $arguments['task'] ?? 'invoice management',
+            'context' => $arguments['context'] ?? 'No specific context provided',
+        ]);
+
+        return Response::text($rendered);
+    }
+}
+```
+
+### Step 5: Update InvoiceServer to Include Resources and Prompts
+
+Update `app/Mcp/Servers/InvoiceServer.php` to include the resource and prompt:
+
+```php
+<?php
+
+namespace App\Mcp\Servers;
+
+use App\Mcp\Prompts\InvoiceManagementPrompt;
+use App\Mcp\Resources\InvoiceSchemaResource;
+use App\Mcp\Tools\GetInvoiceTool;
+use App\Mcp\Tools\ListInvoicesTool;
+use Emeq\McpLaravel\Infrastructure\Mcp\BaseServer;
+
+final class InvoiceServer extends BaseServer
+{
+    public function __construct()
+    {
+        $this->name = 'Invoice MCP Server';
+        $this->version = '1.0.0';
+        $this->instructions = 'You are an AI assistant for invoice management. ' .
+            'You can help users retrieve invoice information and list invoices with filters. ' .
+            'Always provide clear and accurate information.';
+
+        $this->tools = [
+            GetInvoiceTool::class,
+            ListInvoicesTool::class,
+        ];
+
+        $this->resources = [
+            InvoiceSchemaResource::class,
+        ];
+
+        $this->prompts = [
+            InvoiceManagementPrompt::class,
+        ];
+    }
+}
+```
+
+### Step 6: Register the Server
 
 In `routes/ai.php`:
 
@@ -350,13 +578,180 @@ Or register it as a web endpoint:
 Mcp::web('/mcp/invoice', InvoiceServer::class);
 ```
 
-### Step 4: Test Your Server
+### Step 7: Test Your Server
 
 Your AI assistant can now answer questions like:
 
--   "Show me invoice INV-2025-001"
--   "List all paid invoices from this month"
--   "What invoices are overdue?"
+- "Show me invoice INV-2025-001"
+- "List all paid invoices from this month"
+- "What invoices are overdue?"
+- "What is the schema for the Invoice model?" (uses InvoiceSchemaResource)
+- "Help me create a new invoice" (uses InvoiceManagementPrompt)
+
+## AI Assistant Integration
+
+Once you've created and registered your MCP servers, you can integrate them with various AI assistants. The MCP (Model Context Protocol) allows AI assistants to access your Laravel application's tools, resources, and prompts.
+
+### Cursor
+
+Cursor has built-in support for MCP servers. To configure your Laravel MCP server in Cursor:
+
+1. **Create or edit `.cursor/mcp.json`** in your project root:
+
+```json
+{
+    "mcpServers": {
+        "laravel-invoice": {
+            "command": "php",
+            "args": ["artisan", "mcp:start", "invoice"],
+            "cwd": "/path/to/your/laravel/project"
+        }
+    }
+}
+```
+
+2. **Restart Cursor** to load the MCP server configuration.
+
+3. **Verify the connection**: Open Cursor's MCP panel to see your registered servers, tools, resources, and prompts.
+
+**Note**: Replace `/path/to/your/laravel/project` with the absolute path to your Laravel project directory.
+
+### Claude Desktop
+
+Claude Desktop supports MCP servers through its configuration file:
+
+1. **Locate Claude's configuration file**:
+
+    - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+    - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+    - **Linux**: `~/.config/Claude/claude_desktop_config.json`
+
+2. **Add your Laravel MCP server** to the `mcpServers` section:
+
+```json
+{
+    "mcpServers": {
+        "laravel-invoice": {
+            "command": "php",
+            "args": [
+                "/absolute/path/to/your/project/artisan",
+                "mcp:start",
+                "invoice"
+            ],
+            "cwd": "/absolute/path/to/your/project"
+        }
+    }
+}
+```
+
+3. **Restart Claude Desktop** to apply the changes.
+
+4. **Test the connection**: Ask Claude to use your invoice tools, for example: "Get invoice FACTUUR-001 using the get-invoice tool"
+
+### N8N
+
+N8N can integrate with MCP servers using HTTP endpoints or by executing the MCP server as a subprocess. Here are two approaches:
+
+#### Option 1: HTTP Endpoint (Recommended)
+
+If you've registered your server using `Mcp::web()`, you can access it via HTTP:
+
+1. **Register your server as a web endpoint** in `routes/ai.php`:
+
+```php
+use App\Mcp\Servers\InvoiceServer;
+use Laravel\Mcp\Facades\Mcp;
+
+Mcp::web('/mcp/invoice', InvoiceServer::class);
+```
+
+2. **Create an N8N HTTP Request node** that calls your MCP endpoint:
+
+```json
+{
+    "method": "POST",
+    "url": "https://your-laravel-app.com/mcp/invoice",
+    "headers": {
+        "Content-Type": "application/json"
+    },
+    "body": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/call",
+        "params": {
+            "name": "get-invoice",
+            "arguments": {
+                "serial_number": "FACTUUR-001"
+            }
+        }
+    }
+}
+```
+
+#### Option 2: Subprocess Execution
+
+You can execute the MCP server as a subprocess in N8N:
+
+1. **Create an Execute Command node** in N8N:
+
+```bash
+php /path/to/your/project/artisan mcp:start invoice
+```
+
+2. **Use the MCP protocol** to communicate with the server via stdin/stdout.
+
+### Testing Your Integration
+
+After configuring your AI assistant, test the integration:
+
+1. **List available tools**: Ask your AI assistant to list available MCP tools
+2. **Call a tool**: Try using one of your tools, e.g., "Get invoice FACTUUR-001"
+3. **Access resources**: Request a resource, e.g., "Show me the invoice schema"
+4. **Use prompts**: Ask for assistance using your prompts, e.g., "Help me create a new invoice"
+
+### Troubleshooting
+
+**Server not appearing in Cursor/Claude:**
+
+- Verify the path in `mcp.json` is absolute and correct
+- Ensure PHP is in your system PATH or use the full path to PHP
+- Check that `artisan mcp:start invoice` works from the command line
+- Review Cursor/Claude logs for error messages
+
+**Tools not working:**
+
+- Verify your server is registered in `routes/ai.php`
+- Check that tools are properly added to the `$tools` array in your server class
+- Ensure your Laravel application is running and accessible
+
+**Connection errors:**
+
+- Verify database connections are working
+- Check Laravel logs for errors: `storage/logs/laravel.log`
+- Ensure all required dependencies are installed: `composer install`
+
+### Multiple Servers
+
+You can register multiple MCP servers and configure them all:
+
+```json
+{
+    "mcpServers": {
+        "laravel-invoice": {
+            "command": "php",
+            "args": ["artisan", "mcp:start", "invoice"],
+            "cwd": "/path/to/project"
+        },
+        "laravel-orders": {
+            "command": "php",
+            "args": ["artisan", "mcp:start", "orders"],
+            "cwd": "/path/to/project"
+        }
+    }
+}
+```
+
+Each server handle corresponds to the first argument passed to `Mcp::local()` in your `routes/ai.php` file.
 
 ## Configuration
 
@@ -364,11 +759,11 @@ Your AI assistant can now answer questions like:
 
 The main configuration file is located at `config/emeq-mcp.php`. Key settings include:
 
--   `auto_register`: Automatically register pre-built components (default: `true`)
--   `boost.enabled`: Enable Boost integration (default: `false`)
--   `boost.guidelines_path`: Path to Boost guidelines directory (default: `.boost/guidelines`)
--   `server.default_name`: Default MCP server name
--   `server.default_version`: Default MCP server version
+- `auto_register`: Automatically register pre-built components (default: `true`)
+- `boost.enabled`: Enable Boost integration (default: `false`)
+- `boost.guidelines_path`: Path to Boost guidelines directory (default: `.boost/guidelines`)
+- `server.default_name`: Default MCP server name
+- `server.default_version`: Default MCP server version
 
 ### Environment Variables
 
@@ -412,25 +807,25 @@ EMEQ_MCP_PROMPT_DATABASE_DESIGN=true
 
 ### Tools
 
--   **DatabaseQueryTool**: Execute SELECT queries safely
--   **ModelOperationTool**: CRUD operations on Eloquent models
--   **ArtisanCommandTool**: Execute Artisan commands
--   **CacheOperationTool**: Cache operations (get, set, forget, flush)
--   **QueueJobTool**: Dispatch jobs to queues
--   **FileOperationTool**: File system operations
+- **DatabaseQueryTool**: Execute SELECT queries safely
+- **ModelOperationTool**: CRUD operations on Eloquent models
+- **ArtisanCommandTool**: Execute Artisan commands
+- **CacheOperationTool**: Cache operations (get, set, forget, flush)
+- **QueueJobTool**: Dispatch jobs to queues
+- **FileOperationTool**: File system operations
 
 ### Resources
 
--   **ModelSchemaResource**: Eloquent model schemas
--   **RouteListResource**: Application routes
--   **ConfigResource**: Configuration values
--   **LogResource**: Application logs
+- **ModelSchemaResource**: Eloquent model schemas
+- **RouteListResource**: Application routes
+- **ConfigResource**: Configuration values
+- **LogResource**: Application logs
 
 ### Prompts
 
--   **CodeGenerationPrompt**: Code generation assistance
--   **DebuggingPrompt**: Debugging assistance
--   **DatabaseDesignPrompt**: Database design assistance
+- **CodeGenerationPrompt**: Code generation assistance
+- **DebuggingPrompt**: Debugging assistance
+- **DatabaseDesignPrompt**: Database design assistance
 
 ## Creating Custom Components
 
@@ -490,21 +885,21 @@ $contextGuidelines = Boost::getGuidelinesForContext('code-generation');
 
 ## Commands
 
--   `make:mcp-server {name}` - Create a new MCP server
--   `make:mcp-tool {name}` - Create a new MCP tool
--   `make:mcp-resource {name}` - Create a new MCP resource
--   `make:mcp-prompt {name}` - Create a new MCP prompt
--   `mcp:boost-install` - Install Boost integration
--   `mcp:list` - List all registered MCP components
+- `make:mcp-server {name}` - Create a new MCP server
+- `make:mcp-tool {name}` - Create a new MCP tool
+- `make:mcp-resource {name}` - Create a new MCP resource
+- `make:mcp-prompt {name}` - Create a new MCP prompt
+- `mcp:boost-install` - Install Boost integration
+- `mcp:list` - List all registered MCP components
 
 ## Architecture
 
 The package follows Domain-Driven Design principles:
 
--   **Domain Layer**: Contracts, entities, value objects, and domain services
--   **Infrastructure Layer**: Base classes, builders, and pre-built components
--   **Application Layer**: Commands and application services
--   **Support Layer**: Facades and helper functions
+- **Domain Layer**: Contracts, entities, value objects, and domain services
+- **Infrastructure Layer**: Base classes, builders, and pre-built components
+- **Application Layer**: Commands and application services
+- **Support Layer**: Facades and helper functions
 
 ## Testing
 
@@ -528,8 +923,8 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
--   [Emeq](https://github.com/emeq)
--   [All Contributors](../../contributors)
+- [Emeq](https://github.com/emeq)
+- [All Contributors](../../contributors)
 
 ## License
 
