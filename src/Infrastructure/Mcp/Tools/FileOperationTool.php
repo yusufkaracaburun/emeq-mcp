@@ -26,19 +26,19 @@ final class FileOperationTool extends BaseTool
     public function getInputSchema(JsonSchema $schema): array
     {
         return [
-            'type'       => 'object',
+            'type' => 'object',
             'properties' => [
                 'operation' => [
-                    'type'        => 'string',
+                    'type' => 'string',
                     'description' => 'The operation to perform: read, write, delete, list',
-                    'enum'        => ['read', 'write', 'delete', 'list'],
+                    'enum' => ['read', 'write', 'delete', 'list'],
                 ],
                 'path' => [
-                    'type'        => 'string',
+                    'type' => 'string',
                     'description' => 'File or directory path',
                 ],
                 'content' => [
-                    'type'        => 'string',
+                    'type' => 'string',
                     'description' => 'File content (required for write)',
                 ],
             ],
@@ -48,26 +48,26 @@ final class FileOperationTool extends BaseTool
 
     public function handle(Request $request): Response
     {
-        if ( ! config('emeq-mcp.tools.file_operation.enabled', true)) {
+        if (! config('emeq-mcp.tools.file_operation.enabled', true)) {
             return Response::error('File operation tool is disabled.');
         }
 
         $arguments = $this->validateArguments($request->arguments());
         $operation = $arguments['operation'];
-        $path      = $arguments['path'];
+        $path = $arguments['path'];
 
         // Check if path is allowed
-        if ( ! $this->isPathAllowed($path)) {
+        if (! $this->isPathAllowed($path)) {
             return Response::error("Path '{$path}' is not in the allowed list.");
         }
 
         try {
             $result = match ($operation) {
-                'read'   => $this->readFile($path),
-                'write'  => $this->writeFile($path, $arguments['content'] ?? null),
+                'read' => $this->readFile($path),
+                'write' => $this->writeFile($path, $arguments['content'] ?? null),
                 'delete' => $this->deleteFile($path),
-                'list'   => $this->listDirectory($path),
-                default  => throw new InvalidArgumentException("Unknown operation: {$operation}"),
+                'list' => $this->listDirectory($path),
+                default => throw new InvalidArgumentException("Unknown operation: {$operation}"),
             };
 
             return Response::text(json_encode($result, JSON_PRETTY_PRINT));
@@ -104,15 +104,15 @@ final class FileOperationTool extends BaseTool
      */
     private function readFile(string $path): array
     {
-        if ( ! File::exists($path)) {
+        if (! File::exists($path)) {
             throw new RuntimeException("File not found: {$path}");
         }
 
         return [
             'operation' => 'read',
-            'path'      => $path,
-            'content'   => File::get($path),
-            'size'      => File::size($path),
+            'path' => $path,
+            'content' => File::get($path),
+            'size' => File::size($path),
         ];
     }
 
@@ -123,7 +123,7 @@ final class FileOperationTool extends BaseTool
      */
     private function writeFile(string $path, ?string $content): array
     {
-        if (null === $content) {
+        if ($content === null) {
             throw new InvalidArgumentException('Content is required for write operation.');
         }
 
@@ -131,8 +131,8 @@ final class FileOperationTool extends BaseTool
 
         return [
             'operation' => 'write',
-            'path'      => $path,
-            'success'   => true,
+            'path' => $path,
+            'success' => true,
         ];
     }
 
@@ -143,7 +143,7 @@ final class FileOperationTool extends BaseTool
      */
     private function deleteFile(string $path): array
     {
-        if ( ! File::exists($path)) {
+        if (! File::exists($path)) {
             throw new RuntimeException("File not found: {$path}");
         }
 
@@ -151,8 +151,8 @@ final class FileOperationTool extends BaseTool
 
         return [
             'operation' => 'delete',
-            'path'      => $path,
-            'success'   => true,
+            'path' => $path,
+            'success' => true,
         ];
     }
 
@@ -163,17 +163,17 @@ final class FileOperationTool extends BaseTool
      */
     private function listDirectory(string $path): array
     {
-        if ( ! File::isDirectory($path)) {
+        if (! File::isDirectory($path)) {
             throw new RuntimeException("Path is not a directory: {$path}");
         }
 
-        $files       = File::files($path);
+        $files = File::files($path);
         $directories = File::directories($path);
 
         return [
-            'operation'   => 'list',
-            'path'        => $path,
-            'files'       => array_map(fn ($file) => $file->getFilename(), $files),
+            'operation' => 'list',
+            'path' => $path,
+            'files' => array_map(fn ($file) => $file->getFilename(), $files),
             'directories' => array_map(fn ($dir) => basename($dir), $directories),
         ];
     }
