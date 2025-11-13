@@ -25,23 +25,23 @@ final class CacheOperationTool extends BaseTool
     public function getInputSchema(JsonSchema $schema): array
     {
         return [
-            'type' => 'object',
+            'type'       => 'object',
             'properties' => [
                 'operation' => [
-                    'type' => 'string',
+                    'type'        => 'string',
                     'description' => 'The operation to perform: get, set, forget, flush',
-                    'enum' => ['get', 'set', 'forget', 'flush'],
+                    'enum'        => ['get', 'set', 'forget', 'flush'],
                 ],
                 'key' => [
-                    'type' => 'string',
+                    'type'        => 'string',
                     'description' => 'Cache key (required for get, set, forget)',
                 ],
                 'value' => [
-                    'type' => 'string',
+                    'type'        => 'string',
                     'description' => 'Cache value (required for set)',
                 ],
                 'ttl' => [
-                    'type' => 'integer',
+                    'type'        => 'integer',
                     'description' => 'Time to live in seconds (optional for set)',
                 ],
             ],
@@ -51,20 +51,20 @@ final class CacheOperationTool extends BaseTool
 
     public function handle(Request $request): Response
     {
-        if (! config('emeq-mcp.tools.cache_operation.enabled', true)) {
+        if ( ! config('emeq-mcp.tools.cache_operation.enabled', true)) {
             return Response::error('Cache operation tool is disabled.');
         }
 
-        $arguments = $this->validateArguments($request->arguments());
+        $arguments = $this->validateArguments($request->all());
         $operation = $arguments['operation'];
 
         try {
             $result = match ($operation) {
-                'get' => $this->getCache($arguments['key'] ?? null),
-                'set' => $this->setCache($arguments['key'] ?? null, $arguments['value'] ?? null, $arguments['ttl'] ?? null),
+                'get'    => $this->getCache($arguments['key'] ?? null),
+                'set'    => $this->setCache($arguments['key'] ?? null, $arguments['value'] ?? null, $arguments['ttl'] ?? null),
                 'forget' => $this->forgetCache($arguments['key'] ?? null),
-                'flush' => $this->flushCache(),
-                default => throw new InvalidArgumentException("Unknown operation: {$operation}"),
+                'flush'  => $this->flushCache(),
+                default  => throw new InvalidArgumentException("Unknown operation: {$operation}"),
             };
 
             return Response::text(json_encode($result, JSON_PRETTY_PRINT));
@@ -80,7 +80,7 @@ final class CacheOperationTool extends BaseTool
      */
     private function getCache(?string $key): array
     {
-        if (! $key) {
+        if ( ! $key) {
             throw new InvalidArgumentException('Key is required for get operation.');
         }
 
@@ -88,9 +88,9 @@ final class CacheOperationTool extends BaseTool
 
         return [
             'operation' => 'get',
-            'key' => $key,
-            'value' => $value,
-            'found' => $value !== null,
+            'key'       => $key,
+            'value'     => $value,
+            'found'     => null !== $value,
         ];
     }
 
@@ -101,11 +101,11 @@ final class CacheOperationTool extends BaseTool
      */
     private function setCache(?string $key, ?string $value, ?int $ttl): array
     {
-        if (! $key) {
+        if ( ! $key) {
             throw new InvalidArgumentException('Key is required for set operation.');
         }
 
-        if ($value === null) {
+        if (null === $value) {
             throw new InvalidArgumentException('Value is required for set operation.');
         }
 
@@ -117,8 +117,8 @@ final class CacheOperationTool extends BaseTool
 
         return [
             'operation' => 'set',
-            'key' => $key,
-            'success' => true,
+            'key'       => $key,
+            'success'   => true,
         ];
     }
 
@@ -129,7 +129,7 @@ final class CacheOperationTool extends BaseTool
      */
     private function forgetCache(?string $key): array
     {
-        if (! $key) {
+        if ( ! $key) {
             throw new InvalidArgumentException('Key is required for forget operation.');
         }
 
@@ -137,8 +137,8 @@ final class CacheOperationTool extends BaseTool
 
         return [
             'operation' => 'forget',
-            'key' => $key,
-            'success' => true,
+            'key'       => $key,
+            'success'   => true,
         ];
     }
 
@@ -153,8 +153,8 @@ final class CacheOperationTool extends BaseTool
 
         return [
             'operation' => 'flush',
-            'success' => true,
-            'message' => 'All cache cleared.',
+            'success'   => true,
+            'message'   => 'All cache cleared.',
         ];
     }
 }
