@@ -23,30 +23,27 @@ use Emeq\McpLaravel\Infrastructure\Mcp\BaseServer;
  */
 final class InvoiceServer extends BaseServer
 {
-    public function __construct()
-    {
-        $this->name = 'Invoice MCP Server';
-        $this->version = '1.0.0';
-        $this->instructions = 'You are an AI assistant for invoice management. '.
-            'You can help users retrieve invoice information and list invoices with filters. '.
-            'Always provide clear and accurate information. '.
-            'When listing invoices, provide summaries. '.
-            'When getting an invoice, provide all relevant details.';
+    protected string $name         = 'Invoice MCP Server';
+    protected string $version      = '1.0.0';
+    protected string $instructions = 'You are an AI assistant for invoice management. ' .
+        'You can help users retrieve invoice information and list invoices with filters. ' .
+        'Always provide clear and accurate information. ' .
+        'When listing invoices, provide summaries. ' .
+        'When getting an invoice, provide all relevant details.';
 
-        // Register invoice tools
-        $this->tools = [
-            GetInvoiceTool::class,
-            ListInvoicesTool::class,
-        ];
+    // Register invoice tools
+    protected array $tools = [
+        GetInvoiceTool::class,
+        ListInvoicesTool::class,
+    ];
 
-        // Register invoice resources
-        $this->resources = [
-            InvoiceSchemaResource::class,
-        ];
+    // Register invoice resources
+    protected array $resources = [
+        InvoiceSchemaResource::class,
+    ];
 
-        // Register invoice prompts
-        $this->prompts = [
-            InvoiceManagementPrompt::class,
-        ];
-    }
+    // Register invoice prompts
+    protected array $prompts = [
+        InvoiceManagementPrompt::class,
+    ];
 }

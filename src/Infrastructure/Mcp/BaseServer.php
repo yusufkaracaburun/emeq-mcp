@@ -24,21 +24,21 @@ abstract class BaseServer extends Server
     /**
      * The tools registered with this MCP server.
      *
-     * @var array<int, class-string<\Laravel\Mcp\Server\Tool>>
+     * @var array<int, class-string<Server\Tool>>
      */
     protected array $tools = [];
 
     /**
      * The resources registered with this MCP server.
      *
-     * @var array<int, class-string<\Laravel\Mcp\Server\Resource>>
+     * @var array<int, class-string<Server\Resource>>
      */
     protected array $resources = [];
 
     /**
      * The prompts registered with this MCP server.
      *
-     * @var array<int, class-string<\Laravel\Mcp\Server\Prompt>>
+     * @var array<int, class-string<Server\Prompt>>
      */
     protected array $prompts = [];
 
@@ -69,7 +69,7 @@ abstract class BaseServer extends Server
     /**
      * Get the tools registered with this server.
      *
-     * @return array<int, class-string<\Laravel\Mcp\Server\Tool>>
+     * @return array<int, class-string<Server\Tool>>
      */
     public function getTools(): array
     {
@@ -79,7 +79,7 @@ abstract class BaseServer extends Server
     /**
      * Get the resources registered with this server.
      *
-     * @return array<int, class-string<\Laravel\Mcp\Server\Resource>>
+     * @return array<int, class-string<Server\Resource>>
      */
     public function getResources(): array
     {
@@ -89,7 +89,7 @@ abstract class BaseServer extends Server
     /**
      * Get the prompts registered with this server.
      *
-     * @return array<int, class-string<\Laravel\Mcp\Server\Prompt>>
+     * @return array<int, class-string<Server\Prompt>>
      */
     public function getPrompts(): array
     {
