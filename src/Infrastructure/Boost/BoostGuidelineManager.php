@@ -2,15 +2,13 @@
 
 namespace Emeq\McpLaravel\Infrastructure\Boost;
 
-use Emeq\McpLaravel\Domain\Boost\Contracts\GuidelineProviderInterface;
 use Emeq\McpLaravel\Domain\Boost\Services\BoostGuidelineService;
 
 final class BoostGuidelineManager
 {
     public function __construct(
         private readonly BoostGuidelineService $guidelineService
-    ) {
-    }
+    ) {}
 
     /**
      * Load guidelines from configured path.
@@ -54,4 +52,3 @@ final class BoostGuidelineManager
         $this->guidelineService->addGuideline($guideline);
     }
 }
-

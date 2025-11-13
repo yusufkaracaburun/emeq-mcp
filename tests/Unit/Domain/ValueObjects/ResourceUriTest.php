@@ -32,4 +32,3 @@ test('resource uri can extract path', function () {
 
     expect($uri->getPath())->toBeString();
 });
-

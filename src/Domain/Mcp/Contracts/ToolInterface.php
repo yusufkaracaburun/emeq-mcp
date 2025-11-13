@@ -29,4 +29,3 @@ interface ToolInterface
      */
     public function handle(Request $request): Response;
 }
-

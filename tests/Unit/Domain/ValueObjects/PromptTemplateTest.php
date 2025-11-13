@@ -29,4 +29,3 @@ test('prompt template supports both syntaxes', function () {
 
     expect($rendered)->toContain('John')->toContain('Jane');
 });
-

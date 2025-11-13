@@ -9,9 +9,13 @@ use Emeq\McpLaravel\Infrastructure\Mcp\BaseResource;
 final class ResourceBuilder implements McpBuilderInterface
 {
     private string $uri;
+
     private string $name;
+
     private string $description;
+
     private string $mimeType = 'text/plain';
+
     private ?string $handler = null;
 
     /**
@@ -79,8 +83,7 @@ final class ResourceBuilder implements McpBuilderInterface
                 private readonly string $description,
                 private readonly string $mimeType,
                 private readonly ?string $handler
-            ) {
-            }
+            ) {}
 
             public function getUri(): string
             {
@@ -115,4 +118,3 @@ final class ResourceBuilder implements McpBuilderInterface
         };
     }
 }
-

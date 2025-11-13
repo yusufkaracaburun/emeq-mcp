@@ -3,7 +3,7 @@
 use Emeq\McpLaravel\Domain\Boost\Services\BoostGuidelineService;
 
 test('boost guideline service can add guidelines', function () {
-    $service = new BoostGuidelineService();
+    $service = new BoostGuidelineService;
 
     $service->addGuideline([
         'context' => 'code-generation',
@@ -16,7 +16,7 @@ test('boost guideline service can add guidelines', function () {
 });
 
 test('boost guideline service can get guidelines for context', function () {
-    $service = new BoostGuidelineService();
+    $service = new BoostGuidelineService;
 
     $service->addGuideline([
         'context' => 'code-generation',
@@ -30,7 +30,7 @@ test('boost guideline service can get guidelines for context', function () {
 });
 
 test('boost guideline service can load guidelines from file', function () {
-    $service = new BoostGuidelineService();
+    $service = new BoostGuidelineService;
     $testFile = storage_path('app/test-guidelines.json');
 
     // Create test file
@@ -49,4 +49,3 @@ test('boost guideline service can load guidelines from file', function () {
         unlink($testFile);
     }
 });
-

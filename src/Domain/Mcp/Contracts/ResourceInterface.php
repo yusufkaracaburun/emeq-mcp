@@ -32,4 +32,3 @@ interface ResourceInterface
      */
     public function handle(Request $request): Response;
 }
-

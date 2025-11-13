@@ -28,4 +28,3 @@ interface BoostIntegrationInterface
      */
     public function provideContext(array $context): void;
 }
-

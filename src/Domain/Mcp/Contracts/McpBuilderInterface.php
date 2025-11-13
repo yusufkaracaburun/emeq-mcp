@@ -11,4 +11,3 @@ interface McpBuilderInterface
      */
     public function build();
 }
-

@@ -44,4 +44,3 @@ test('make mcp server command fails if server exists', function () {
         File::delete($serverPath);
     }
 });
-

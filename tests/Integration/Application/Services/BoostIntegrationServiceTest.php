@@ -32,4 +32,3 @@ test('boost integration service can add context', function () {
     // Context is added internally, no exception should be thrown
     expect(true)->toBeTrue();
 });
-

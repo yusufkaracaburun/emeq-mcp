@@ -62,4 +62,3 @@ final class DebuggingPrompt extends BasePrompt
         return Response::text($rendered);
     }
 }
-

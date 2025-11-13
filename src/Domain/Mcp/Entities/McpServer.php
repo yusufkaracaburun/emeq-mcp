@@ -2,8 +2,6 @@
 
 namespace Emeq\McpLaravel\Domain\Mcp\Entities;
 
-use Emeq\McpLaravel\Domain\Mcp\Contracts\ServerInterface;
-
 final class McpServer
 {
     /**
@@ -18,8 +16,7 @@ final class McpServer
         private array $tools = [],
         private array $resources = [],
         private array $prompts = []
-    ) {
-    }
+    ) {}
 
     /**
      * Get the server name.
@@ -119,4 +116,3 @@ final class McpServer
         return ! empty($this->tools) || ! empty($this->resources) || ! empty($this->prompts);
     }
 }
-

@@ -44,4 +44,3 @@ if (! function_exists('mcp_prompt')) {
         return new PromptBuilder;
     }
 }
-

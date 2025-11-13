@@ -16,7 +16,6 @@ use Emeq\McpLaravel\Domain\Boost\Services\BoostGuidelineService;
 use Emeq\McpLaravel\Domain\Boost\Services\BoostIntegrationService as DomainBoostIntegrationService;
 use Emeq\McpLaravel\Infrastructure\Boost\BoostContextProvider;
 use Emeq\McpLaravel\Infrastructure\Boost\BoostGuidelineManager;
-use Illuminate\Support\Facades\Route;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -74,11 +73,9 @@ class EmeqMcpLaravelServiceProvider extends PackageServiceProvider
         }
     }
 
-
     protected function registerBoostIntegration(): void
     {
         $boostService = $this->app->make(BoostIntegrationInterface::class);
         $boostService->initialize();
     }
 }
-

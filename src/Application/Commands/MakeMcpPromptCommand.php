@@ -65,4 +65,3 @@ final class MakeMcpPromptCommand extends Command
         return app('files');
     }
 }
-

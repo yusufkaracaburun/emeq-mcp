@@ -15,7 +15,6 @@ use Emeq\McpLaravel\Infrastructure\Mcp\Tools\DatabaseQueryTool;
 use Emeq\McpLaravel\Infrastructure\Mcp\Tools\FileOperationTool;
 use Emeq\McpLaravel\Infrastructure\Mcp\Tools\ModelOperationTool;
 use Emeq\McpLaravel\Infrastructure\Mcp\Tools\QueueJobTool;
-use Laravel\Mcp\Facades\Mcp;
 
 final class McpRegistryService
 {
@@ -150,4 +149,3 @@ final class McpRegistryService
         ];
     }
 }
-

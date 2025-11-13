@@ -14,8 +14,7 @@ final class McpTool
         private readonly string $description,
         private readonly ToolSchema $inputSchema,
         private readonly ?string $handler = null
-    ) {
-    }
+    ) {}
 
     /**
      * Get the tool name.
@@ -63,4 +62,3 @@ final class McpTool
         ];
     }
 }
-

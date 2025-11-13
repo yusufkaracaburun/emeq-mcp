@@ -20,4 +20,3 @@ class Boost extends Facade
         return BoostIntegrationService::class;
     }
 }
-

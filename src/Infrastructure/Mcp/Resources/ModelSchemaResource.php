@@ -174,7 +174,6 @@ final class ModelSchemaResource extends BaseResource
     /**
      * Get model relationships.
      *
-     * @param  Model  $model
      * @return array<string, mixed>
      */
     private function getModelRelationships(Model $model): array
@@ -195,4 +194,3 @@ final class ModelSchemaResource extends BaseResource
         return $relationships;
     }
 }
-

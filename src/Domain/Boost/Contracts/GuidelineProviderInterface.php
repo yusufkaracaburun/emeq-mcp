@@ -30,4 +30,3 @@ interface GuidelineProviderInterface
      */
     public function loadGuidelines(string $path): void;
 }
-

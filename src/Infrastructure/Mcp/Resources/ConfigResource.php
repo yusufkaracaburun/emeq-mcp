@@ -70,4 +70,3 @@ final class ConfigResource extends BaseResource
         return null;
     }
 }
-

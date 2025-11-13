@@ -62,4 +62,3 @@ final class CodeGenerationPrompt extends BasePrompt
         return Response::text($rendered);
     }
 }
-

@@ -9,8 +9,11 @@ use Emeq\McpLaravel\Infrastructure\Mcp\BaseTool;
 final class ToolBuilder implements McpBuilderInterface
 {
     private string $name;
+
     private string $description;
+
     private array $inputSchema = [];
+
     private ?string $handler = null;
 
     /**
@@ -72,8 +75,7 @@ final class ToolBuilder implements McpBuilderInterface
                 private string $toolDescription,
                 private ToolSchema $schema,
                 private ?string $handler
-            ) {
-            }
+            ) {}
 
             public function getName(): string
             {
@@ -103,4 +105,3 @@ final class ToolBuilder implements McpBuilderInterface
         };
     }
 }
-

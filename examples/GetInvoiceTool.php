@@ -59,7 +59,7 @@ final class GetInvoiceTool extends BaseTool
                 return Response::error('Either invoice_number or invoice_id must be provided.');
             }
 
-            if (!$invoice) {
+            if (! $invoice) {
                 return Response::error('Invoice not found. Please verify the invoice number or ID.');
             }
 
@@ -110,4 +110,3 @@ final class GetInvoiceTool extends BaseTool
         }
     }
 }
-

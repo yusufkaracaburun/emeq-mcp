@@ -3,7 +3,7 @@
 use Emeq\McpLaravel\Infrastructure\Mcp\Builders\ToolBuilder;
 
 test('tool builder can create tool with fluent api', function () {
-    $tool = (new ToolBuilder())
+    $tool = (new ToolBuilder)
         ->name('test-tool')
         ->description('Test tool description')
         ->inputSchema([
@@ -18,7 +18,7 @@ test('tool builder can create tool with fluent api', function () {
 });
 
 test('tool builder can set handler', function () {
-    $tool = (new ToolBuilder())
+    $tool = (new ToolBuilder)
         ->name('test-tool')
         ->description('Test')
         ->inputSchema(['type' => 'object'])
@@ -28,4 +28,3 @@ test('tool builder can set handler', function () {
     // Handler is set internally, tool should be buildable
     expect($tool)->toBeInstanceOf(\Emeq\McpLaravel\Infrastructure\Mcp\BaseTool::class);
 });
-

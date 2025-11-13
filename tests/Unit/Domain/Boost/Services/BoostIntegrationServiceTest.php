@@ -3,7 +3,6 @@
 use Emeq\McpLaravel\Domain\Boost\Contracts\GuidelineProviderInterface;
 use Emeq\McpLaravel\Domain\Boost\Services\BoostIntegrationService;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
-use Mockery\MockInterface;
 
 test('boost integration service checks if enabled', function () {
     $config = Mockery::mock(ConfigRepository::class);
@@ -31,4 +30,3 @@ test('boost integration service initializes when enabled', function () {
     // Should not throw exception
     expect(true)->toBeTrue();
 });
-

@@ -11,8 +11,7 @@ final class BoostIntegrationService implements BoostIntegrationInterface
     public function __construct(
         private readonly GuidelineProviderInterface $guidelineProvider,
         private readonly ConfigRepository $config
-    ) {
-    }
+    ) {}
 
     /**
      * Initialize the Boost integration.
@@ -59,4 +58,3 @@ final class BoostIntegrationService implements BoostIntegrationInterface
         // For now, we'll store it for potential future use
     }
 }
-

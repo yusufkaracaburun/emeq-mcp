@@ -65,4 +65,3 @@ final class MakeMcpToolCommand extends Command
         return app('files');
     }
 }
-

@@ -33,9 +33,10 @@ final class BoostInstallCommand extends Command
     protected function updateConfig(): void
     {
         $configPath = config_path('emeq-mcp.php');
-        
+
         if (! file_exists($configPath)) {
             $this->warn('Config file not found. Please publish the config first: php artisan vendor:publish --tag=emeq-mcp-config');
+
             return;
         }
 
@@ -53,4 +54,3 @@ final class BoostInstallCommand extends Command
         }
     }
 }
-

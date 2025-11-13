@@ -44,4 +44,3 @@ final class McpListCommand extends Command
         return self::SUCCESS;
     }
 }
-

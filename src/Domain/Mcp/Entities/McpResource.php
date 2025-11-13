@@ -12,8 +12,7 @@ final class McpResource
         private readonly string $description,
         private readonly string $mimeType,
         private readonly ?string $handler = null
-    ) {
-    }
+    ) {}
 
     /**
      * Get the resource URI.
@@ -70,4 +69,3 @@ final class McpResource
         ];
     }
 }
-

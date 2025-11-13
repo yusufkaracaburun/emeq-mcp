@@ -15,8 +15,7 @@ final class McpPrompt
         private readonly array $arguments,
         private readonly ?PromptTemplate $template = null,
         private readonly ?string $handler = null
-    ) {
-    }
+    ) {}
 
     /**
      * Get the prompt name.
@@ -74,4 +73,3 @@ final class McpPrompt
         ];
     }
 }
-

@@ -43,4 +43,3 @@ abstract class BaseResource extends Resource implements ResourceInterface
         return new ResourceUri($uri);
     }
 }
-

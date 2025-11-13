@@ -27,8 +27,6 @@ final class ToolSchema
 
     /**
      * Get a property from the schema.
-     *
-     * @return mixed
      */
     public function getProperty(string $key, mixed $default = null): mixed
     {
@@ -59,4 +57,3 @@ final class ToolSchema
         }
     }
 }
-

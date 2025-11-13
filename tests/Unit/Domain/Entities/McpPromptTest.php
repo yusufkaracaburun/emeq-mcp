@@ -40,4 +40,3 @@ test('mcp prompt can be converted to array', function () {
         ->and($array['name'])->toBe('test-prompt')
         ->and($array)->toHaveKey('arguments');
 });
-
