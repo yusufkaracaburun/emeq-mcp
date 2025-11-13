@@ -43,8 +43,8 @@ abstract class BaseTool extends Tool implements ToolInterface
      */
     protected function validateArguments(array $arguments): array
     {
-        $schema = $this->getInputSchema();
-        $rules = $this->convertSchemaToRules($schema);
+        $schema = $this->getInputSchema(new JsonSchema());
+        $rules  = $this->convertSchemaToRules($schema);
 
         return Validator::make($arguments, $rules)->validate();
     }
@@ -89,9 +89,9 @@ abstract class BaseTool extends Tool implements ToolInterface
             'string' => 'string',
             'number', 'integer' => 'numeric',
             'boolean' => 'boolean',
-            'array' => 'array',
-            'object' => 'array',
-            default => 'string',
+            'array'   => 'array',
+            'object'  => 'array',
+            default   => 'string',
         };
     }
 }
