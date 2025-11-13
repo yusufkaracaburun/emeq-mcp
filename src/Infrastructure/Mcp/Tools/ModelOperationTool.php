@@ -56,7 +56,7 @@ final class ModelOperationTool extends BaseTool
             return Response::error('Model operation tool is disabled.');
         }
 
-        $arguments  = $this->validateArguments($request->all());
+        $arguments  = $this->validateArguments($request->arguments());
         $modelClass = $arguments['model'];
         $operation  = $arguments['operation'];
 
